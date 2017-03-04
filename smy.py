@@ -6,12 +6,8 @@ from scipy.optimize import leastsq, linprog
 from scipy import stats
 
 S = np.array(map(lambda x: float(x.split(":")[2]), open("yena.txt", "r").read().split()))
-# print S
 p = 5
 n = len(S)
-# print n
-# C = np.array([[sum([S[k]*S[k + np.abs(i - j)] for k in range(n - np.abs(i - j))])/n for j in range(n)] for i in range(n)])
-# print C
 
 def auto_regr(k , S):
     return sum(a[i]*S[k - p + i] for i in range(p))
@@ -36,8 +32,15 @@ c = -sum(sum(a[i]*S[n - i-1-tau] for i in range(p)) for tau in range(n - p))/(n 
 for tau in range(30):
     print c + sum(a[i]*S[n - i-1-tau] for i in range(p))
     print S[n - tau-1]
-X = [c - 5 + sum(a[i]*S[n - i-1-tau] for i in range(p)) for tau in range(30)]
-Y = [S[n - tau-1] for tau in range(30)]
-t = [i for i in range(30)]
-plt.plot(t, X, t, Y)
+zh = 30
+max_len = 15
+X = [c - 5 + sum(a[i]*S[n - i-1-tau- zh] for i in range(p)) for tau in range(max_len)]
+Y = [S[n - tau-1 - zh] for tau in range(max_len)]
+Z = np.zeros(max_len)
+for i in range(p):
+    Z[i] = S[n - i - 1 - zh]
+for i in range(p, max_len):
+    Z[i] = c - 5 + sum(a[j]*Z[i - j - 1] for j in range(p))
+t = [i for i in range(max_len)]
+plt.plot(t, X, t, Y, t, Z)
 plt.show()
