@@ -43,4 +43,5 @@ for i in range(p, max_len):
     Z[i] = c - 5 + sum(a[j]*Z[i - j - 1] for j in range(p))
 t = [i for i in range(max_len)]
 plt.plot(t, X, t, Y, t, Z)
+print a
 plt.show()
